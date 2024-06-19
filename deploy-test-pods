@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: somenamespace
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anothernamespace
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-one
+  namespace: somenamespace
+  labels:
+    app: pod-one
+spec:
+  containers:
+    - image: sgargan/cilium-metric-leak-test:latest
+      imagePullPolicy: Never
+      name: pod-one
+      resources: 
+        limits: 
+          cpu: 100m
+          memory: 100Mi
+  nodeSelector:
+    kubernetes.io/hostname: kind-control-plane
+  restartPolicy: Never
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-two
+  namespace: anothernamespace
+  labels:
+    app: pod-two
+spec:
+  containers:
+    - image: sgargan/cilium-metric-leak-test:latest
+      imagePullPolicy: Never
+      name: pod-two
+      resources: 
+        limits: 
+          cpu: 100m
+          memory: 100Mi
+  restartPolicy: Never
